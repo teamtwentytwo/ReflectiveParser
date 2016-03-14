@@ -1,10 +1,16 @@
+import java.lang.reflect.Method;
 import java.util.Scanner;
 
 public class Parser {
+    //TODO: ERROR CHECKING
+    //TODO: Implement changing of className.
 
-    //TODO: ERROR CHECKING & FUNCTION LIST
-    static boolean verbose = false;
-	public static void main(String[] argv) {
+    //Fields
+    static String className = "Commands";
+    static boolean  verbose = false;
+    static Object o;
+    static Class  c;
+    public static void main(String[] argv) {
         boolean help = false;
         boolean noqualifier = true;
 
@@ -70,7 +76,7 @@ public class Parser {
         String input;
         Scanner s = new Scanner(System.in);
 
-
+        //initialize();
         //Print ONLY if Program initialized properly.
         System.out.println(INITIALIZATIONTEXT);
 
@@ -78,14 +84,43 @@ public class Parser {
 
             System.out.print("> ");
             input = s.next();
-            if (input.equals("v")){
-                toggleVerbose();
-            }else if (input.equals("q")){
-                System.exit(0);
+            switch (input) {
+                case "v":
+                    toggleVerbose();
+                    break;
+                case "q":
+                    System.exit(0);
+                case "f":
+                    System.out.println(functionList());
+                    break;
             }
 
         }
 	}
+
+    private static String functionList(){
+        String functions = "";
+        try {
+            c = Class.forName(className);
+            for (Method method : c.getDeclaredMethods()){
+                String parameterTypes = "";
+                for (Class temp : method.getParameterTypes()){
+                    parameterTypes += " " + temp.getSimpleName();
+                }
+                functions += "(" + method.getName() + parameterTypes + ") : " + method.getReturnType().getSimpleName() + "\n";
+            }
+            return functions;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return functions;
+
+    }
+    private static void initialize(){
+
+
+    }
+
     private static void toggleVerbose(){
         if (!verbose) {
             verbose = true;
