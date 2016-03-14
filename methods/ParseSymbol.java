@@ -34,6 +34,7 @@ abstract class ParseSymbol<T> {
 
 	private final Type _type;
 	private final T _value;
+	private FileLocation _location = null;
 
 	/**
 	 * Constructor that sets the token's type and value.
@@ -55,6 +56,16 @@ abstract class ParseSymbol<T> {
 	 */
 	public T getValue() {
 		return _value;
+	}
+
+	/**
+	 * Accessors for the token's location in the file.
+	 */
+	public void setLocation(FileLocation location) {
+		_location = location;
+	}
+	public FileLocation getLocation() {
+		return _location;
 	}
 }
 

@@ -15,14 +15,15 @@ class Lexer {
 		Sign,
 	}
 
-	private String _text;
+	private String _text = "";
+	private FileLocation _location;
 	private boolean _finalized = false;
 
 	/**
 	 * Default constructor.
 	 */
 	public Lexer() {
-		_text = "";
+		_location = new FileLocation(null);
 	}
 
 	/**
@@ -57,8 +58,9 @@ class Lexer {
 	 */
 	public ParseSymbol readNext() throws Exception {
 		ParseSymbol terminal = null;
-		State state = State.Initial;
 		int begin = 0, end = 0;
+
+		State state = State.Initial;
 		while (state != State.Final) {
 			char c = _text.charAt(end++);
 			switch (state) {
@@ -175,7 +177,16 @@ class Lexer {
 			}
 		}
 
+		// Update the location data, and attach it to the terminal
+		if (terminal != null) {
+			terminal.setLocation(_location.copy());
+			terminal.getLocation().skipColumns(begin);
+		}
+		_location.skipColumns(end);
+
+		// Trim the input data of the used portion
 		_text = _text.substring(end);
+
 		return terminal;
 	}
 }
