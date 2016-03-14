@@ -39,38 +39,38 @@ abstract class Token<T> {
 	}
 }
 
-class TokenLeftParenthesis extends Token<Void> {
-	public TokenLeftParenthesis() {
+class Token_LeftParenthesis extends Token<Void> {
+	public Token_LeftParenthesis() {
 		super(TokenType.LeftParenthesis, null);
 	}
 }
 
-class TokenRightParenthesis extends Token<Void> {
-	public TokenRightParenthesis() {
+class Token_RightParenthesis extends Token<Void> {
+	public Token_RightParenthesis() {
 		super(TokenType.RightParenthesis, null);
 	}
 }
 
-class TokenIdentifier extends Token<String> {
-	public TokenIdentifier(String value) {
+class Token_Identifier extends Token<String> {
+	public Token_Identifier(String value) {
 		super(TokenType.Identifier, value);
 	}
 }
 
-class TokenInteger extends Token<Integer> {
-	public TokenInteger(Integer value) {
+class Token_Integer extends Token<Integer> {
+	public Token_Integer(Integer value) {
 		super(TokenType.Integer, value);
 	}
 }
 
-class TokenFloat extends Token<Float> {
-	public TokenFloat(Float value) {
+class Token_Float extends Token<Float> {
+	public Token_Float(Float value) {
 		super(TokenType.Float, value);
 	}
 }
 
-class TokenString extends Token<String> {
-	public TokenString(String value) {
+class Token_String extends Token<String> {
+	public Token_String(String value) {
 		super(TokenType.String, value);
 	}
 }
