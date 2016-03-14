@@ -9,6 +9,7 @@ abstract class ParseSymbol<T> {
 	 */
 	public enum Type {
 		// Terminal symbols
+		EndOfFile (true),
 		LeftParenthesis (true),
 		RightParenthesis (true),
 		Identifier (true),
@@ -54,6 +55,12 @@ abstract class ParseSymbol<T> {
 	 */
 	public T getValue() {
 		return _value;
+	}
+}
+
+class ParseSymbol_EndOfFile extends ParseSymbol<Void> {
+	public ParseSymbol_EndOfFile() {
+		super(Type.EndOfFile, null);
 	}
 }
 

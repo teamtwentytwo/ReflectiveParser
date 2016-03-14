@@ -15,21 +15,10 @@ class Parser {
 	 */
 	public Parser() {
 		_stack = new Stack<ParseSymbol.Type>();
+		_stack.push(ParseSymbol.Type.EndOfFile);
 		_stack.push(ParseSymbol.Type.Expression);
 		_lexer = new Lexer();
 	}
-
-	/**
-	 * Constructor that provides some initial input text.
-	 *
-	 * @param text initial input text
-	 */
-	public Parser(String text) {
-		_stack = new Stack<ParseSymbol.Type>();
-		_stack.push(ParseSymbol.Type.Expression);
-		_lexer = new Lexer(text);
-	}
-
 
 	/**
 	 * Provides additional text to be read.
@@ -41,9 +30,22 @@ class Parser {
 	}
 
 	/**
-	 * Performs the parse.
+	 * Finalizes the Lexer, allowing the parse to fully complete.
 	 */
-	public void parse() throws Exception {
+	public void finalize() {
+		_lexer.finalize();
+	}
+
+	public boolean isFinalized() {
+		return _lexer.isFinalized();
+	}
+
+	/**
+	 * Performs the parse.
+	 *
+	 * @return Returns true if the parse completed; this can only occur after a call to finalize.
+	 */
+	public boolean parse() throws Exception {
 		// TODO - generate parse output
 
 		if (_lookahead == null) {
@@ -107,5 +109,7 @@ class Parser {
 					}
 			}
 		}
+
+		return _stack.empty();
 	}
 };

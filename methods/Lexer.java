@@ -6,7 +6,7 @@ package methods;
 class Lexer {
 	//Enumeration for States used in readParseSymbol NFA
 	private enum State{
-		Done,
+		Final,
 		Initial,
 		Identifier,
 		Integer,
@@ -16,6 +16,7 @@ class Lexer {
 	}
 
 	private String _text;
+	private boolean _finalized = false;
 
 	/**
 	 * Default constructor.
@@ -25,21 +26,26 @@ class Lexer {
 	}
 
 	/**
-	 * Constructor that provides some initial input text.
-	 *
-	 * @param text initial input text
-	 */
-	public Lexer(String text) {
-		_text = text;
-	}
-
-	/**
 	 * Provides additional text to be read.
 	 *
 	 * @param text additional input text
 	 */
 	public void provide(String text) {
-		_text += text;
+		if (!isFinalized()) {
+			_text += text;
+		}
+	}
+
+	/**
+	 * Marks the end of input: readNext can now return an EOF,
+	 * and provide will discard input.
+	 */
+	public void finalize() {
+		_finalized = true;
+	}
+
+	public boolean isFinalized() {
+		return _finalized;
 	}
 
 	/**
@@ -47,12 +53,13 @@ class Lexer {
 	 *
 	 * @return the ParseSymbol representing the parsed terminal symbol
 	 *         returns null if the end of the input text has been safely reached
+	 *         returns an EOF terminal instead of null if finalize() has been called
 	 */
 	public ParseSymbol readNext() throws Exception {
 		ParseSymbol terminal = null;
 		State state = State.Initial;
 		int begin = 0, end = 0;
-		while (state != State.Done) {
+		while (state != State.Final) {
 			char c = _text.charAt(end++);
 			switch (state) {
 				// Initial State of NFA
@@ -60,12 +67,12 @@ class Lexer {
 					// Final State for Left Parenthesis
 					if (c == '(') {
 						terminal = new ParseSymbol_LeftParenthesis();
-						state = State.Done;
+						state = State.Final;
 					}
 					// Final State for Right Parenthesis
 					else if (c == ')') {
 						terminal = new ParseSymbol_RightParenthesis();
-						state = State.Done;
+						state = State.Final;
 					}
 					// Move to Intermediate State for checking String
 					else if (c == '"') {
@@ -90,9 +97,12 @@ class Lexer {
 					else if (c >= '0' && c <= '9') {
 						state = State.Integer;
 					}
-					// Empty Transition to final state, return null
+					// End of text, transition to final state, return null (or EndOfFile if isFinalized())
 					else if (c == '\0') {
-						state = State.Done;
+						if (isFinalized()) {
+							terminal = new ParseSymbol_EndOfFile();
+						}
+						state = State.Final;
 					}
 					else {
 						state = State.Initial;
@@ -105,7 +115,7 @@ class Lexer {
 					if (c == '"') {
 						String value = _text.substring(begin + 1, end - 1); // Exclude quotes
 						terminal = new ParseSymbol_String(value);
-						state = State.Done;
+						state = State.Final;
 					}
 					else if (c == '\0' || c == '\n') {
 						throw new Exception("No Closing Quotes for String");
@@ -122,7 +132,7 @@ class Lexer {
 						--end; // Don't consume this character
 						String value = _text.substring(begin, end);
 						terminal = new ParseSymbol_Identifier(value);
-						state = State.Done;
+						state = State.Final;
 					}
 					break;
 
@@ -148,7 +158,7 @@ class Lexer {
 						--end; // Don't consume this character
 						int value = Integer.parseInt(_text.substring(begin, end)); // TODO handle overflow
 						terminal = new ParseSymbol_Integer(value);
-						state = State.Done;
+						state = State.Final;
 					}
 					break;
 
@@ -159,7 +169,7 @@ class Lexer {
 						--end; // Don't consume this character
 						float value = Float.parseFloat(_text.substring(begin, end)); // TODO handle overflow
 						terminal = new ParseSymbol_Float(value);
-						state = State.Done;
+						state = State.Final;
 					}
 					break;
 			}
