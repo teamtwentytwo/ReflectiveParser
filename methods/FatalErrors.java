@@ -19,7 +19,7 @@ public class FatalErrors {
         return -3;
     }
     public static int invalidHelp(){
-        System.err.println("Qualifier --help (-h, -?) should not appear with any comand-line arguments.");
+        System.err.println("Qualifier --help (-h, -?) should not appear with any command-line arguments.");
         return -4;
 
     }

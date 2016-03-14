@@ -1,15 +1,18 @@
 package methods;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.*;
 
 public class Methods {
     //TODO: ERROR CHECKING
     //TODO: Implement changing of className.
-
+    //TODO: Check if name include .class if not append.
     //Fields
-    static String className = "methods.Commands";
+    static String className = "Commands";
     static String jarName;
     static boolean  verbose = false;
     static Class  command;
@@ -52,15 +55,11 @@ public class Methods {
     public static void main(String[] argv) {
         boolean help = false;
         boolean noqualifier = true;
-        //Getting className if specified
-        String[] args = new String[0];
-        if (argv.length > 0){
-            args = Arrays.copyOfRange(argv, 1, argv.length);
-        }
+
 
         //Check flags
         int i = 0;
-        for (String arg : args) {
+        for (String arg : argv) {
             String argument = arg;
             //Check long flags
             if (argument.startsWith("--")) {
@@ -106,6 +105,8 @@ public class Methods {
             initialize();
         } catch (ClassNotFoundException e) {
             System.exit(FatalErrors.classNotFound(className));
+        } catch (IOException e) {
+            System.exit(FatalErrors.jarNotFound(jarName));
         }
 
 
@@ -119,6 +120,10 @@ public class Methods {
                 case "v":
                     toggleVerbose();
                     break;
+                case "h":
+                case "?":
+                    System.out.println(HELPTEXT);
+                    break;
                 case "q":
                     System.exit(0);
                 case "f":
@@ -127,9 +132,16 @@ public class Methods {
             }
         }
 	}
-    private static void initialize() throws ClassNotFoundException {
-        command = Class.forName(className);
+
+    private static void initialize() throws ClassNotFoundException, IOException {
+        File jarFile = new File(jarName);
+        URL fileURL = jarFile.toURI().toURL();
+        String jarURL = "jar:" + fileURL + "!/";
+        URL urls [] = { new URL(jarURL) };
+        URLClassLoader ucl = new URLClassLoader(urls);
+        command = Class.forName(className, true,   ucl);
     }
+
 
     private static String functionList(){
         String functions = "";
