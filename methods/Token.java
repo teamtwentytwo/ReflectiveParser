@@ -1,3 +1,5 @@
+package methods;
+
 /**
  * Base class for tokens: terminal symbols used in parsing.
  */

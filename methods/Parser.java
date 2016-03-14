@@ -1,3 +1,5 @@
+package methods;
+
 import java.lang.reflect.Method;
 import java.util.Scanner;
 
@@ -6,7 +8,7 @@ public class Parser {
     //TODO: Implement changing of className.
 
     //Fields
-    static String className = "Commands";
+    static String className = "methods.Commands";
     static boolean  verbose = false;
     static Object o;
     static Class  c;
@@ -27,7 +29,7 @@ public class Parser {
                 "  methods {-v --verbose}* <jar-file> [<class-name>]\n" +
                 "Arguments:\n" +
                 "  <jar-file>:   The .jar file that contains the class to load (see next line).\n" +
-                "  <class-name>: The fully qualified class name containing public static command methods to call. [Default=\"Commands\"]\n" +
+                "  <class-name>: The fully qualified class name containing public static command methods to call. [Default=\"methods.Commands\"]\n" +
                 "Qualifiers:\n" +
                 "  -v --verbose: Print out detailed errors, warning, and tracking.\n" +
                 "  -h -? --help: Print out a detailed help message.\n" +
@@ -41,7 +43,7 @@ public class Parser {
                 "  methods {-v --verbose}* <jar-file> [<class-name>]\n" +
                 "Arguments:\n" +
                 "  <jar-file>:   The .jar file that contains the class to load (see next line).\n" +
-                "  <class-name>: The fully qualified class name containing public static command methods to call. [Default=\"Commands\"]\n" +
+                "  <class-name>: The fully qualified class name containing public static command methods to call. [Default=\"methods.Commands\"]\n" +
                 "Qualifiers:\n" +
                 "  -v --verbose: Print out detailed errors, warning, and tracking.\n" +
                 "  -h -? --help: Print out a detailed help message.\n" +
@@ -116,6 +118,10 @@ public class Parser {
         return functions;
 
     }
+
+
+
+
     private static void initialize(){
 
 
