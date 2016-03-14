@@ -4,7 +4,6 @@ package methods;
  * Base class for parser symbols.
  */
 abstract class ParseSymbol<T> {
-
 	/**
 	 * Enumeration of symbol types.
 	 */
@@ -56,7 +55,6 @@ abstract class ParseSymbol<T> {
 	public T getValue() {
 		return _value;
 	}
-
 }
 
 class ParseSymbol_LeftParenthesis extends ParseSymbol<Void> {
@@ -92,17 +90,5 @@ class ParseSymbol_Float extends ParseSymbol<Float> {
 class ParseSymbol_String extends ParseSymbol<String> {
 	public ParseSymbol_String(String value) {
 		super(Type.String, value);
-	}
-}
-
-class ParseSymbol_Expression extends ParseSymbol<String> {
-	public ParseSymbol_Expression() { // TODO - assign value
-		super(Type.Expression, null);
-	}
-}
-
-class ParseSymbol_ExpressionList extends ParseSymbol<String> {
-	public ParseSymbol_ExpressionList() { // TODO - assign value
-		super(Type.ExpressionList, null);
 	}
 }
