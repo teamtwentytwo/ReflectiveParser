@@ -81,11 +81,13 @@ class Lexer {
 						state = State.Initial;
 					}
 					// Move to Intermediate State for checking Identifiers
-					else if (Character.toString(c).matches("[A-Za-z_]")) {
+					else if ((c >= 'A' && c <= 'Z')
+							|| (c >= 'a' && c <= 'z')
+							|| (c == '_')) {
 						state = State.Identifier;
 					}
 					// Move to Intermediate State for checking Numbers
-					else if (Character.toString(c).matches("[0-9]")) {
+					else if (c >= '0' && c <= '9') {
 						state = State.Integer;
 					}
 					// Empty Transition to final state, return null
@@ -113,7 +115,10 @@ class Lexer {
 				// Intermediate state to check for valid Identifier
 				case Identifier:
 					//Final State for Identifiers
-					if (!Character.toString(c).matches("[A-Za-z0-9_]")) {
+					if (!((c >= 'A' && c <= 'Z')
+							|| (c >= 'a' && c <= 'z')
+							|| (c >= '0' && c <= '9')
+							|| (c == '_'))) {
 						--end; // Don't consume this character
 						String value = _text.substring(begin, end);
 						terminal = new ParseSymbol_Identifier(value);
@@ -124,7 +129,7 @@ class Lexer {
 				// Intermediate state to check for sign of number
 				case Sign:
 					//Move to Integer state if character after sign is valid
-					if (Character.toString(c).matches("[0-9]")) {
+					if (c >= '0' && c <= '9') {
 						state = State.Integer;
 					}
 					else {
@@ -139,7 +144,7 @@ class Lexer {
 						state = State.Float;
 					}
 					// Final State for Integers
-					else if (!Character.toString(c).matches("[0-9]")) {
+					else if (!(c >= '0' && c <= '9')) {
 						--end; // Don't consume this character
 						int value = Integer.parseInt(_text.substring(begin, end)); // TODO handle overflow
 						terminal = new ParseSymbol_Integer(value);
@@ -150,7 +155,7 @@ class Lexer {
 				// Intermediate state to check for valid Floats
 				case Float:
 					//Final State for Floats
-					if (!Character.toString(c).matches("[0-9]")) {
+					if (!(c >= '0' && c <= '9')) {
 						--end; // Don't consume this character
 						float value = Float.parseFloat(_text.substring(begin, end)); // TODO handle overflow
 						terminal = new ParseSymbol_Float(value);
