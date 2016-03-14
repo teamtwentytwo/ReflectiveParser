@@ -1,5 +1,6 @@
 package methods;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 abstract class Expression {
@@ -7,7 +8,7 @@ abstract class Expression {
 	 * Evaluates the expression and returns its value.
 	 * Runtime type checking will be necessary to determine the value's type.
 	 */
-	public abstract Object evaluate();
+	public abstract Object evaluate(Class commands) throws Exception;
 }
 
 class Expression_FunctionCall extends Expression {
@@ -27,10 +28,25 @@ class Expression_FunctionCall extends Expression {
 		_right_paren = right_paren;
 	}
 
-	public Object evaluate() {
-		// TODO - look up identifier
-		// TODO - call function, pass arguments
-		return null; // TODO - return
+	public Object evaluate(Class commands) throws Exception{
+
+		String funcName = _identifier.getValue();
+		Object[] parameters = new Object[_arguments.size()];
+
+		for (int i = 0; i < _arguments.size(); i++) {
+			parameters[i] = _arguments.get(i).evaluate(commands);
+
+		}
+		Class[] types = new Class[_arguments.size()];
+
+		for (int i = 0; i < parameters.length; i++) {
+			types[i] = parameters[i].getClass();
+		}
+		Method method = commands.getMethod(funcName, types);
+
+		Object returnValue = method.invoke(null, parameters);
+
+		return returnValue;
 	}
 }
 
@@ -41,7 +57,7 @@ class Expression_Integer extends Expression {
 		_symbol = symbol;
 	}
 
-	public Object evaluate() {
+	public Integer evaluate(Class commands) throws Exception {
 		return _symbol.getValue();
 	}
 }
@@ -53,7 +69,7 @@ class Expression_Float extends Expression {
 		_symbol = symbol;
 	}
 
-	public Object evaluate() {
+	public Float evaluate(Class commands) throws Exception {
 		return _symbol.getValue();
 	}
 }
@@ -65,7 +81,7 @@ class Expression_String extends Expression {
 		_symbol = symbol;
 	}
 
-	public Object evaluate() {
+	public String evaluate(Class commands)throws Exception {
 		return _symbol.getValue();
 	}
 }
