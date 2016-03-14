@@ -37,13 +37,12 @@ class Tokenizer {
 	 * @return the Token object that was parsed from the text
 	 */
 	public Token readToken() {
-		Token token;
+		Token token = null;
 
 		int i = 0;
 		int state = 0;
 		while (token == null && state >= 0) {
-			char c = _text[i++];
-
+			char c = _text.charAt(i++);
 			switch (state) {
 				case 0:
 					if (c == '(') {
