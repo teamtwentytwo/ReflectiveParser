@@ -10,8 +10,9 @@ public class Parser {
     //Fields
     static String className = "methods.Commands";
     static boolean  verbose = false;
-    static Object o;
-    static Class  c;
+    static Class  command;
+
+
     public static void main(String[] argv) {
         boolean help = false;
         boolean noqualifier = true;
@@ -50,6 +51,7 @@ public class Parser {
                 "Single-char qualifiers may be grouped; long qualifiers may be truncated to unique prefixes and are not case sensitive.\n";
 
 
+
         for (String argument : argv){
             if (argument.contains("-")){
                 int index = 0;
@@ -78,8 +80,11 @@ public class Parser {
         String input;
         Scanner s = new Scanner(System.in);
 
-        //initialize();
-        //Print ONLY if Program initialized properly.
+        if (argv[0].length() > 0){
+            className = argv[0];
+        }
+        initialize();
+
         System.out.println(INITIALIZATIONTEXT);
 
 		while (true){
@@ -100,33 +105,31 @@ public class Parser {
         }
 	}
 
+    private static void initialize(){
+        try {
+            command = Class.forName(className);
+            
+        } catch (ClassNotFoundException e) {
+            System.exit(FatalErrors.classNotFound(className));
+        }
+
+    }
+
     private static String functionList(){
         String functions = "";
-        try {
-            c = Class.forName(className);
-            for (Method method : c.getDeclaredMethods()){
-                String parameterTypes = "";
-                for (Class temp : method.getParameterTypes()){
-                    parameterTypes += " " + temp.getSimpleName();
-                }
-                functions += "(" + method.getName() + parameterTypes + ") : " + method.getReturnType().getSimpleName() + "\n";
+        for (Method method : command.getDeclaredMethods()){
+            String parameterTypes = "";
+            for (Class temp : method.getParameterTypes()){
+                parameterTypes += " " + temp.getSimpleName();
             }
-            return functions;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            functions += "(" + method.getName() + parameterTypes + ") : " + method.getReturnType().getSimpleName() + "\n";
         }
         return functions;
-
     }
 
 
 
-
-    private static void initialize(){
-
-
-    }
-
+    //Helper Functions
     private static void toggleVerbose(){
         if (!verbose) {
             verbose = true;
