@@ -1,5 +1,7 @@
 package methods;
 
+import java.util.List;
+
 /**
  * Base class for parser symbols.
  */
@@ -16,6 +18,12 @@ abstract class ParseSymbol<T> {
 		Integer (true),
 		Float (true),
 		String (true),
+
+		// Action symbols
+		Act_FunctionCall (false),
+		Act_Value (false),
+		Act_ExpressionList (false),
+		Act_NewExpressionList (false),
 
 		// Non-terminal symbols
 		Expression (false),
@@ -108,5 +116,17 @@ class ParseSymbol_Float extends ParseSymbol<Float> {
 class ParseSymbol_String extends ParseSymbol<String> {
 	public ParseSymbol_String(String value) {
 		super(Type.String, value);
+	}
+}
+
+class ParseSymbol_Expression extends ParseSymbol<Expression> {
+	public ParseSymbol_Expression(Expression value) {
+		super(Type.Expression, value);
+	}
+}
+
+class ParseSymbol_ExpressionList extends ParseSymbol<List<Expression>> {
+	public ParseSymbol_ExpressionList(List<Expression> value) {
+		super(Type.ExpressionList, value);
 	}
 }

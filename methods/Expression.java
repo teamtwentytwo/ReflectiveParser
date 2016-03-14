@@ -11,12 +11,20 @@ abstract class Expression {
 }
 
 class Expression_FunctionCall extends Expression {
+	private ParseSymbol_LeftParenthesis _left_paren;
 	private ParseSymbol_Identifier _identifier;
 	private List<Expression> _arguments;
+	private ParseSymbol_RightParenthesis _right_paren;
 
-	public Expression_FunctionCall(ParseSymbol_Identifier identifier, List<Expression> arguments) {
+	public Expression_FunctionCall(
+			ParseSymbol_LeftParenthesis left_paren,
+			ParseSymbol_Identifier identifier,
+			List<Expression> arguments,
+			ParseSymbol_RightParenthesis right_paren) {
+		_left_paren = left_paren;
 		_identifier = identifier;
 		_arguments = arguments;
+		_right_paren = right_paren;
 	}
 
 	public Object evaluate() {
