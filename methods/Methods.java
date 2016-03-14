@@ -6,12 +6,11 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.jar.JarFile;
 
 public class Methods {
     //TODO: ERROR CHECKING
-    //TODO: Implement changing of className.
-    //TODO: Check if name include .class if not append.
-    //Fields
+    // Fields
     static String className = "Commands";
     static String jarName;
     static boolean  verbose = false;
@@ -54,54 +53,63 @@ public class Methods {
 
     public static void main(String[] argv) {
         boolean help = false;
-        boolean noqualifier = true;
+        boolean noQualifier = true;
+        int i;
 
-
-        //Check flags
-        int i = 0;
-        for (String arg : argv) {
-            String argument = arg;
+        for (i = 0; i < argv.length; i++) {
+            String argument = argv[i];
             //Check long flags
             if (argument.startsWith("--")) {
                 argument = argument.substring(2);
-                if (argument.toLowerCase().equals("help")) help = true;
-                if (argument.toLowerCase().equals("verbose")) verbose = true;
+                if (argument.toLowerCase().equals("help")) {
+                    help = true;
+                } else if (argument.toLowerCase().equals("verbose")) {
+                    verbose = true;
+
+                } else {
+                    System.exit(FatalErrors.unrecognizedQualifier(argument));
+                }
             } else if (argument.startsWith("-")) {
                 for (char c : argument.substring(1).toCharArray()) {
                     if (c == '?' | c == 'h') {
                         help = true;
-                        noqualifier = false;
-                    }
-                    if (c == 'v') {
+                        noQualifier = false;
+                    } else if (c == 'v') {
                         verbose = true;
-                        noqualifier = false;
+                        noQualifier = false;
+                    } else {
+                        System.exit(FatalErrors.unrecognizedQualifier(c, argument));
                     }
                 }
             } else {
-                if (i == 0) {
-                    i++;
-                    jarName = argument;
-                }else if (i == 1 ) {
-                    i++;
-                    className  = argument;
-                }else{
-                    System.exit(FatalErrors.invalidCommandLineArguments());
-                }
+                break;
+            }
+        }
+        for (;i < argv.length; i++){
+            if (argv[i].startsWith("-")){
+                System.exit(FatalErrors.invalidOrder());
+            }
+            if (i == 1){
+                jarName = argv[i];
+            }else if (i == 2){
+                className = argv[i];
+            }else {
+                System.exit(FatalErrors.invalidCommandLineArguments());
+
             }
         }
 
+
         //Print necessary text
-        if (noqualifier) System.out.println(SYNOPSIS);
+        if (noQualifier) System.out.println(SYNOPSIS);
         if (help) System.out.println(HELPTEXT);
 
         //Getting input
         String input;
         Scanner s = new Scanner(System.in);
 
-
-
-
         try {
+            JarFile j = new JarFile(jarName);
             initialize();
         } catch (ClassNotFoundException e) {
             System.exit(FatalErrors.classNotFound(className));
@@ -111,7 +119,7 @@ public class Methods {
 
 
         System.out.println(INITIALIZATIONTEXT);
-
+        Parser p = new Parser();
 		while (true){
 
             System.out.print("> ");
@@ -129,6 +137,14 @@ public class Methods {
                 case "f":
                     System.out.println(functionList());
                     break;
+                default:
+                    p.provide(input);
+                    p.finalize();
+                    try {
+                        p.parse();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
             }
         }
 	}

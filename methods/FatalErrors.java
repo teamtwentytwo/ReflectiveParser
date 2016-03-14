@@ -5,8 +5,8 @@ public class FatalErrors {
         System.err.println("Unrecognized qualifier: --"+ longQualifier+ ".");
         return -1;
     }
-    public static int unrecognizedQualifier(String letter,  String lettersInQualifier){
-        System.err.println("Unrecognized qualifier "+ letter +" in "+ lettersInQualifier +".");
+    public static int unrecognizedQualifier(char letter,  String lettersInQualifier){
+        System.err.println("Unrecognized qualifier '"+ letter +"' in '"+ lettersInQualifier +"'.");
         return -1;
     }
 
