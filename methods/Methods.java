@@ -1,6 +1,7 @@
 package methods;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Methods {
@@ -9,6 +10,7 @@ public class Methods {
 
     //Fields
     static String className = "methods.Commands";
+    static String jarName;
     static boolean  verbose = false;
     static Class  command;
 
@@ -50,30 +52,43 @@ public class Methods {
     public static void main(String[] argv) {
         boolean help = false;
         boolean noqualifier = true;
+        //Getting className if specified
+        String[] args = new String[0];
+        if (argv.length > 0){
+            args = Arrays.copyOfRange(argv, 1, argv.length);
+        }
 
         //Check flags
-        for (String argument : argv){
-            if (argument.contains("-")){
-                int index = 0;
-                for (int i = 0 ; i < argument.length(); i++){
-                    if (argument.charAt(i) == '-'){
-                        index = i;
-                    }
-                }
-                for (char c: argument.substring(index+1).toCharArray()){
-                    if (c == '?' | c == 'h'){
+        int i = 0;
+        for (String arg : args) {
+            String argument = arg;
+            //Check long flags
+            if (argument.startsWith("--")) {
+                argument = argument.substring(2);
+                if (argument.toLowerCase().equals("help")) help = true;
+                if (argument.toLowerCase().equals("verbose")) verbose = true;
+            } else if (argument.startsWith("-")) {
+                for (char c : argument.substring(1).toCharArray()) {
+                    if (c == '?' | c == 'h') {
                         help = true;
                         noqualifier = false;
                     }
-                    if ( c == 'v'){
+                    if (c == 'v') {
                         verbose = true;
                         noqualifier = false;
                     }
                 }
+            } else {
+                if (i == 0) {
+                    i++;
+                    jarName = argument;
+                }else if (i == 1 ) {
+                    i++;
+                    className  = argument;
+                }else{
+                    System.exit(FatalErrors.invalidCommandLineArguments());
+                }
             }
-            //Check worded flags
-            if (argument.toLowerCase().contains("--help")) help = true;
-            if (argument.toLowerCase().contains("--verbose")) verbose = true;
         }
 
         //Print necessary text
@@ -84,10 +99,7 @@ public class Methods {
         String input;
         Scanner s = new Scanner(System.in);
 
-        //Getting className if specified
-        if (argv[0].length() > 0){
-            className = argv[0];
-        }
+
 
 
         try {
