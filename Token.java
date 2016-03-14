@@ -9,7 +9,6 @@ abstract class Token<T> {
 		Integer,
 		Float,
 		String,
-		Character,
 	}
 
 	private final TokenType _type;
@@ -71,11 +70,5 @@ class TokenFloat extends Token<Float> {
 class TokenString extends Token<String> {
 	public TokenString(String value) {
 		super(TokenType.String, value);
-	}
-}
-
-class TokenCharacter extends Token<Character> {
-	public TokenCharacter(Character value) {
-		super(TokenType.Character, value);
 	}
 }
