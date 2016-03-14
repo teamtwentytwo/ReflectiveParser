@@ -101,7 +101,7 @@ class Tokenizer {
 						token = new Token_String(value);
 					}
 					else if (c == 0) {
-						throw new Exception("No Closing Quotes for String")
+						throw new Exception("No Closing Quotes for String");
 					}
 					else {
 						state = STRING;
@@ -110,7 +110,7 @@ class Tokenizer {
 				//Intermediate state to check for valid Identifier
 				case IDENTIFIER:
 					if (!c.toString().matches("[a-zA-Z0-9_ ]")){
-						throw new Exception("Invalid Identifier")
+						throw new Exception("Invalid Identifier");
 					}
 					//Final State for Identifiers
 					else if (Character.isWhitespace(c)){
@@ -134,7 +134,7 @@ class Tokenizer {
 				//Intermediate state to check for valid Integers and Floats
 				case INTEGER:
 					if (!c.toString().matches("[0-9.) ]")){
-						throw new Exception("Invalid Integer")
+						throw new Exception("Invalid Integer");
 					}
 					//If '.' appears, number is float, so move to Float State
 					else if (c == '.'){
