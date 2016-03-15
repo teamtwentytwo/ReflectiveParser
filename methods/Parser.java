@@ -135,7 +135,7 @@ class Parser {
 						_stack.pop();
 						ParseSymbol_ExpressionList list = (ParseSymbol_ExpressionList)_semantic_stack.pop();
 						ParseSymbol_Expression expression = (ParseSymbol_Expression)_semantic_stack.pop();
-						list.getValue().add(expression.getValue());
+						list.getValue().add(0, expression.getValue());
 						_semantic_stack.push(list);
 					}
 					break;
