@@ -29,7 +29,7 @@ public class Methods {
             "  methods {-v --verbose}* <jar-file> [<class-name>]\n" +
             "Arguments:\n" +
             "  <jar-file>:   The .jar file that contains the class to load (see next line).\n" +
-            "  <class-name>: The fully qualified class name containing public static command methods to call. [Default=\"methods.Commands\"]\n" +
+            "  <class-name>: The fully qualified class name containing public static command methods to call. [Default=\"Commands\"]\n" +
             "Qualifiers:\n" +
             "  -v --verbose: Print out detailed errors, warning, and tracking.\n" +
             "  -h -? --help: Print out a detailed help message.\n" +
@@ -43,7 +43,7 @@ public class Methods {
             "  methods {-v --verbose}* <jar-file> [<class-name>]\n" +
             "Arguments:\n" +
             "  <jar-file>:   The .jar file that contains the class to load (see next line).\n" +
-            "  <class-name>: The fully qualified class name containing public static command methods to call. [Default=\"methods.Commands\"]\n" +
+            "  <class-name>: The fully qualified class name containing public static command methods to call. [Default=\"Commands\"]\n" +
             "Qualifiers:\n" +
             "  -v --verbose: Print out detailed errors, warning, and tracking.\n" +
             "  -h -? --help: Print out a detailed help message.\n" +
@@ -85,13 +85,13 @@ public class Methods {
                 break;
             }
         }
-        for (;i < argv.length; i++){
+        for (int p = 0; i < argv.length; i++, p++){
             if (argv[i].startsWith("-")){
                 System.exit(FatalErrors.invalidOrder());
             }
-            if (i == 1){
+            if (p == 0){
                 jarName = argv[i];
-            }else if (i == 2){
+            }else if (p == 1){
                 className = argv[i];
             }else {
                 System.exit(FatalErrors.invalidCommandLineArguments());
@@ -121,9 +121,14 @@ public class Methods {
         System.out.println(INITIALIZATIONTEXT);
         Parser p = new Parser();
 		while (true){
-
             System.out.print("> ");
-            input = s.next();
+			if (s.hasNextLine()) {
+				input = s.nextLine();
+			}
+			else {
+				System.out.print("\n");
+				break;
+			}
             switch (input) {
                 case "v":
                     toggleVerbose();
@@ -141,7 +146,9 @@ public class Methods {
                     p.provide(input);
                     p.finalize();
                     try {
-                        p.parse();
+						Expression expression = p.parse();
+						Object value = expression.evaluate(command);
+						System.out.println(value.toString());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

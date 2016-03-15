@@ -63,12 +63,10 @@ class Lexer {
 		State state = State.Initial;
 		while (state != State.Final) {
 			char c;
-			if (_text.length() > end) {
-				 c = _text.charAt(end++);
+			if (_text.length() <= end) {
+				_text += '\0'; // Algorithm expects a null-terminated string
 			}
-			else {
-				c = '\0';
-			}
+			c = _text.charAt(end++);
 			switch (state) {
 				// Initial State of NFA
 				case Initial:
