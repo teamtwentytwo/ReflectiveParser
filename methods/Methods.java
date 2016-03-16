@@ -119,7 +119,6 @@ public class Methods {
 
 
         System.out.println(INITIALIZATIONTEXT);
-        Parser p = new Parser();
 		while (true){
             System.out.print("> ");
 			if (s.hasNextLine()) {
@@ -143,9 +142,10 @@ public class Methods {
                     System.out.println(functionList());
                     break;
                 default:
-                    p.provide(input);
-                    p.finalize();
                     try {
+						Parser p = new Parser();
+						p.provide(input);
+						p.finalize();
 						Expression expression = p.parse();
 						Object value = expression.evaluate(command);
 						System.out.println(value.toString());
