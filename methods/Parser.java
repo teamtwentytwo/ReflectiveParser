@@ -34,21 +34,21 @@ class Parser {
 	}
 
 	/**
-	 * Finalizes the Lexer, allowing the parse to fully complete.
+	 * Closes input on Lexer, allowing the parse to fully complete.
 	 */
-	public void finalize() {
-		_lexer.finalize();
+	public void closeInput() {
+		_lexer.closeInput();
 	}
 
-	public boolean isFinalized() {
-		return _lexer.isFinalized();
+	public boolean isInputClosed() {
+		return _lexer.isInputClosed();
 	}
 
 	/**
 	 * Performs the parse.
 	 *
 	 * @return If the parse completed, returns the parse output, otherwise null.
-	 *         The parse can only complete after a call to finalize().
+	 *         The parse can only complete after a call to closeInput().
 	 */
 	public Expression parse() throws Exception {
 		if (_lookahead == null) {

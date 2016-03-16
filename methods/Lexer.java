@@ -17,7 +17,7 @@ class Lexer {
 
 	private String _text = "\0";
 	private FileLocation _location;
-	private boolean _finalized = false;
+	private boolean _input_closed = false;
 
 	/**
 	 * Default constructor.
@@ -32,7 +32,7 @@ class Lexer {
 	 * @param text additional input text
 	 */
 	public void provide(String text) {
-		if (!isFinalized()) {
+		if (!isInputClosed()) {
 			_text = _text.substring(0, _text.length() - 1) + text + '\0';
 		}
 	}
@@ -41,12 +41,12 @@ class Lexer {
 	 * Marks the end of input: readNext can now return an EOF,
 	 * and provide will discard input.
 	 */
-	public void finalize() {
-		_finalized = true;
+	public void closeInput() {
+		_input_closed = true;
 	}
 
-	public boolean isFinalized() {
-		return _finalized;
+	public boolean isInputClosed() {
+		return _input_closed;
 	}
 
 	/**
@@ -54,7 +54,7 @@ class Lexer {
 	 *
 	 * @return the ParseSymbol representing the parsed terminal symbol
 	 *         returns null if the end of the input text has been safely reached
-	 *         returns an EOF terminal instead of null if finalize() has been called
+	 *         returns an EOF terminal instead of null if provideEOF() has been called
 	 */
 	public ParseSymbol readNext() throws Exception {
 		ParseSymbol terminal = null;
@@ -99,10 +99,10 @@ class Lexer {
 					else if (c >= '0' && c <= '9') {
 						state = State.Integer;
 					}
-					// End of text, transition to final state, return null (or EndOfFile if isFinalized())
+					// End of text, transition to final state, return null (or EndOfFile if isInputClosed())
 					else if (c == '\0') {
 						--end; // Don't consume the null terminator
-						if (isFinalized()) {
+						if (isInputClosed()) {
 							terminal = new ParseSymbol_EndOfFile();
 						}
 						state = State.Final;

@@ -145,7 +145,7 @@ public class Methods {
                     try {
 						Parser p = new Parser();
 						p.provide(input);
-						p.finalize();
+						p.closeInput();
 						Expression expression = p.parse();
 						Object value = expression.evaluate(command);
 						System.out.println(value.toString());
