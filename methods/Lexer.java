@@ -15,7 +15,7 @@ class Lexer {
 		Sign,
 	}
 
-	private String _text = "";
+	private String _text = "\0";
 	private FileLocation _location;
 	private boolean _finalized = false;
 
@@ -33,7 +33,7 @@ class Lexer {
 	 */
 	public void provide(String text) {
 		if (!isFinalized()) {
-			_text += text;
+			_text = _text.substring(0, _text.length() - 1) + text + '\0';
 		}
 	}
 
@@ -62,11 +62,7 @@ class Lexer {
 
 		State state = State.Initial;
 		while (state != State.Final) {
-			char c;
-			if (_text.length() <= end) {
-				_text += '\0'; // Algorithm expects a null-terminated string
-			}
-			c = _text.charAt(end++);
+			char c = _text.charAt(end++);
 			switch (state) {
 				// Initial State of NFA
 				case Initial:
@@ -105,6 +101,7 @@ class Lexer {
 					}
 					// End of text, transition to final state, return null (or EndOfFile if isFinalized())
 					else if (c == '\0') {
+						--end; // Don't consume the null terminator
 						if (isFinalized()) {
 							terminal = new ParseSymbol_EndOfFile();
 						}
@@ -194,4 +191,3 @@ class Lexer {
 		return terminal;
 	}
 }
-
