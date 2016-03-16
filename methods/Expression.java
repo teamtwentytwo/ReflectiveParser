@@ -29,24 +29,45 @@ class Expression_FunctionCall extends Expression {
 	}
 
 	public Object evaluate(Class commands) throws Exception{
-
-		String funcName = _identifier.getValue();
 		Object[] parameters = new Object[_arguments.size()];
-
 		for (int i = 0; i < _arguments.size(); i++) {
 			parameters[i] = _arguments.get(i).evaluate(commands);
-
 		}
-		Class[] types = new Class[_arguments.size()];
 
+		Class[] types = new Class[_arguments.size()];
 		for (int i = 0; i < parameters.length; i++) {
 			types[i] = parameters[i].getClass();
+			// Normalize int and float
+			if (types[i] == int.class) types[i] = Integer.class;
+			if (types[i] == float.class) types[i] = Float.class;
 		}
-		Method method = commands.getMethod(funcName, types);
 
-		Object returnValue = method.invoke(null, parameters);
+		String name = _identifier.getValue();
+		for (Method method : commands.getDeclaredMethods()) {
+			if (!name.equals(method.getName())) continue;
 
-		return returnValue;
+			Class[] parameter_types = method.getParameterTypes();
+			if (types.length != parameter_types.length) continue;
+
+			boolean types_matched = true;
+			for (int i = 0; i < types.length; ++i) {
+				// Normalize int and float
+				if (parameter_types[i] == int.class) parameter_types[i] = Integer.class;
+				if (parameter_types[i] == float.class) parameter_types[i] = Float.class;
+
+				if (types[i] != parameter_types[i]) {
+					types_matched = false;
+					break;
+				}
+			}
+			if (!types_matched) continue;
+
+			// If all checks succeeded, we have found the method
+			return method.invoke(null, parameters);
+		}
+
+		// No method has passed all the checks, the method could not be found
+		throw new NoSuchMethodException(name);
 	}
 }
 
