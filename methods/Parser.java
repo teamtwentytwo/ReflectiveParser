@@ -77,7 +77,8 @@ class Parser {
 							_stack.push(_lookahead.getType());
 							break;
 						default:
-							throw new ParseException("Missing Left Parenthesis", _lookahead.getLocation().getColumn() - 1);
+							//throw new ParseException("Missing Left Parenthesis", _lookahead.getLocation().getColumn() - 1);
+							throw new ParseException("Invalid Expression Read", _lookahead.getLocation().getColumn());
 					}
 					break;
 
@@ -97,7 +98,8 @@ class Parser {
 							_stack.push(ParseSymbol.Type.Act_NewExpressionList);
 							break;
 						default:
-							throw new ParseException("Missing Right Parenthesis", _lookahead.getLocation().getColumn());
+							//throw new ParseException("Missing Right Parenthesis", _lookahead.getLocation().getColumn());
+							throw new ParseException("Invalid Expression Read", _lookahead.getLocation().getColumn());
 					}
 					break;
 
