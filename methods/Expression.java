@@ -73,7 +73,17 @@ class Expression_FunctionCall extends Expression {
 		}catch (Exception e){
 			String params = "";
 			for(Class c: types){
-				params += " " + c.toString();
+				if(c == Integer.class){
+					params += " int";
+				}else
+				if(c == Float.class){
+					params += " float";
+				}else
+				if(c == String.class){
+					params += " string";
+				}else{
+					params += " " + c.toString();
+				}
 			}
 			throw new ParseException("Matching function for ("+ name + params +") not found", _identifier.getLocation().getColumn());		
 		}
