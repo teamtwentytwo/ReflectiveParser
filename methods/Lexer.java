@@ -1,5 +1,7 @@
 package methods;
 
+import java.text.ParseException;
+
 /**
  * Performs lexical analysis on input text, transforming it into a sequence of terminal symbols.
  */
@@ -56,9 +58,9 @@ class Lexer {
 	 *         returns null if the end of the input text has been safely reached
 	 *         returns an EOF terminal instead of null if provideEOF() has been called
 	 */
-	public ParseSymbol readNext() throws Exception {
+	public ParseSymbol readNext() throws ParseException {
 		ParseSymbol terminal = null;
-		int begin = 0, end = 0;
+		int begin = 0, end = 0, endOfString = 1;
 
 		State state = State.Initial;
 		while (state != State.Final) {
@@ -108,7 +110,7 @@ class Lexer {
 						state = State.Final;
 					}
 					else {
-						state = State.Initial;
+						throw new ParseException("Invalid Character found", _location.getColumn() + 1);
 					}
 					break;
 
@@ -121,8 +123,9 @@ class Lexer {
 						state = State.Final;
 					}
 					else if (c == '\0' || c == '\n') {
-						throw new Exception("No Closing Quotes for String");
+						throw new ParseException("Reached end of line while reading string", _location.getColumn() + 1 + endOfString);
 					}
+					endOfString++;
 					break;
 
 				// Intermediate state to check for valid Identifier
@@ -146,7 +149,7 @@ class Lexer {
 						state = State.Integer;
 					}
 					else {
-						throw new Exception("Invalid Number");
+						throw new ParseException("Invalid Number", _location.getColumn() + 1);
 					}
 					break;
 
