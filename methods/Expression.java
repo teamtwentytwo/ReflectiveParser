@@ -85,7 +85,7 @@ class Expression_FunctionCall extends Expression {
 					params += " " + c.toString();
 				}
 			}
-			throw new ParseException("Matching function for ("+ name + params +") not found", _identifier.getLocation().getColumn());		
+			throw new ParseException("Matching function for '("+ name + params +")' not found", _identifier.getLocation().getColumn());		
 		}
 	}
 }
