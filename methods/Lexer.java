@@ -123,7 +123,7 @@ class Lexer {
 						state = State.Final;
 					}
 					else if (c == '\0' || c == '\n') {
-						throw new ParseException("Reached end of line while reading string", _location.getColumn() + 1 + endOfString);
+						throw new ParseException("Reached end-of-input while reading string", _location.getColumn() + 1 + endOfString);
 					}
 					endOfString++;
 					break;
