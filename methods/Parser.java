@@ -157,7 +157,7 @@ class Parser {
 						_lookahead = _lexer.readNext();
 					}
 					else {
-						throw new ParseException("Invalid Expression Read", _lookahead.getLocation().getColumn() - 1);
+						throw new ParseException("Invalid Expression Read", _lookahead.getLocation().getColumn());
 					}
 			}
 		}
