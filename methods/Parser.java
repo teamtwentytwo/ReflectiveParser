@@ -1,5 +1,6 @@
 package methods;
 
+import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -50,7 +51,7 @@ class Parser {
 	 * @return If the parse completed, returns the parse output, otherwise null.
 	 *         The parse can only complete after a call to closeInput().
 	 */
-	public Expression parse() throws Exception {
+	public Expression parse() throws ParseException {
 		if (_lookahead == null) {
 			_lookahead = _lexer.readNext();
 		}
@@ -76,7 +77,7 @@ class Parser {
 							_stack.push(_lookahead.getType());
 							break;
 						default:
-							throw new Exception();
+							throw new ParseException("Missing Left Parenthesis", _lookahead.getLocation().getColumn() - 1);
 					}
 					break;
 
@@ -96,7 +97,7 @@ class Parser {
 							_stack.push(ParseSymbol.Type.Act_NewExpressionList);
 							break;
 						default:
-							throw new Exception();
+							throw new ParseException("Missing Right Parenthesis", _lookahead.getLocation().getColumn());
 					}
 					break;
 
@@ -156,7 +157,7 @@ class Parser {
 						_lookahead = _lexer.readNext();
 					}
 					else {
-						throw new Exception();
+						throw new ParseException("Invalid Expression Read", _lookahead.getLocation().getColumn() - 1);
 					}
 			}
 		}
