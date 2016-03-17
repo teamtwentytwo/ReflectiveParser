@@ -51,9 +51,11 @@ public class Methods {
             //Check long flags
             if (argument.startsWith("--")) {
                 argument = argument.substring(2);
-                if (String.valueOf("help").contains(argument.toLowerCase())) {
+				if (argument.length() == 0) {
+				}
+				else if ("help".startsWith(argument.toLowerCase())) {
                     help = true;
-                } else if (String.valueOf("verbose").contains(argument.toLowerCase())) {
+                } else if ("verbose".startsWith(argument.toLowerCase())) {
                     verbose = true;
                 } else {
                     System.exit(FatalErrors.unrecognizedQualifier(argument));
