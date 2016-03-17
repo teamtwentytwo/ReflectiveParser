@@ -11,7 +11,6 @@ import java.util.*;
 import java.util.jar.JarFile;
 
 public class Methods {
-    //TODO: ERROR CHECKING
     // Fields
     static String className = "Commands";
     static String jarName = null;
@@ -90,6 +89,7 @@ public class Methods {
 
 		// Help mode; print synopsis, help text, and exit
 		if (help) {
+			if (jarName != null) System.exit(FatalErrors.invalidHelp());
 			System.out.print(SYNOPSIS);
 			System.out.print("\n");
 			System.out.print(HELPTEXT);
