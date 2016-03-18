@@ -10,6 +10,7 @@ class FileLocation {
 
 	/**
 	 * Constructor that initializes to line 0, column 0.
+	 * @param filename the name of the file
 	 */
 	public FileLocation(String filename) {
 		this(filename, 0, 0);
@@ -17,6 +18,9 @@ class FileLocation {
 
 	/**
 	 * Full constructor.
+	 * @param filename the name of the file
+	 * @param line the line to start at
+	 * @param column the column to start at
 	 */
 	public FileLocation(String filename, int line, int column) {
 		if (filename == null) {
@@ -29,28 +33,20 @@ class FileLocation {
 
 	/**
 	 * Creates a copy of the object.
+	 * @return a copy of the object
 	 */
 	public FileLocation copy() {
 		return new FileLocation(_filename, _line, _column);
 	}
 
-	/**
-	 * Returns the filename.
-	 */
 	public String getFilename() {
 		return _filename;
 	}
 
-	/**
-	 * Returns the line number.
-	 */
 	public int getLine() {
 		return _line;
 	}
 
-	/**
-	 * Returns the column number.
-	 */
 	public int getColumn() {
 		return _column;
 	}
@@ -65,6 +61,7 @@ class FileLocation {
 
 	/**
 	 * Skips a number of columns.
+	 * @param n the number of columns to skip
 	 */
 	public void skipColumns(int n) {
 		_column += n;
@@ -72,17 +69,11 @@ class FileLocation {
 
 	/**
 	 * Moves to the given location.
+	 * @param line the line to move to
+	 * @param column the column to move to
 	 */
 	public void goTo(int line, int column) {
 		_line = line;
 		_column = column;
 	}
-
-	/**
-	 * Converts the location to a printable string.
-	 */
-	public String toString() {
-		return _filename + ":" + Integer.toString(_line) + ":" + Integer.toString(_column);
-	}
-	// TODO - better output formatting/interface?
 }

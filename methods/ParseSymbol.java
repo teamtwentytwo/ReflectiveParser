@@ -6,9 +6,7 @@ import java.util.List;
  * Base class for parser symbols.
  */
 abstract class ParseSymbol<T> {
-	/**
-	 * Enumeration of symbol types.
-	 */
+	// Enumeration of symbol types.
 	public enum Type {
 		// Terminal symbols
 		EndOfFile (true),
@@ -44,34 +42,23 @@ abstract class ParseSymbol<T> {
 	private final T _value;
 	private FileLocation _location = null;
 
-	/**
-	 * Constructor that sets the token's type and value.
-	 */
 	public ParseSymbol(Type type, T value) {
 		_type = type;
 		_value = value;
 	}
 
-	/**
-	 * Returns the token's type.
-	 */
 	public Type getType() {
 		return _type;
 	}
 
-	/**
-	 * Returns the token's value.
-	 */
 	public T getValue() {
 		return _value;
 	}
 
-	/**
-	 * Accessors for the token's location in the file.
-	 */
 	public void setLocation(FileLocation location) {
 		_location = location;
 	}
+
 	public FileLocation getLocation() {
 		return _location;
 	}

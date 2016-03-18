@@ -57,6 +57,7 @@ class Lexer {
 	 * @return the ParseSymbol representing the parsed terminal symbol
 	 *         returns null if the end of the input text has been safely reached
 	 *         returns an EOF terminal instead of null if provideEOF() has been called
+	 * @throws ParseException throws if an error is occurred during lexing
 	 */
 	public ParseSymbol readNext() throws ParseException {
 		ParseSymbol terminal = null;

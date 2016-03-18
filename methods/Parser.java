@@ -50,6 +50,7 @@ class Parser {
 	 *
 	 * @return If the parse completed, returns the parse output, otherwise null.
 	 *         The parse can only complete after a call to closeInput().
+	 * @throws ParseException throws if an error is occurred during parsing
 	 */
 	public Expression parse() throws ParseException {
 		if (_lookahead == null) {

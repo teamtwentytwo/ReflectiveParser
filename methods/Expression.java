@@ -8,6 +8,9 @@ abstract class Expression {
 	/**
 	 * Evaluates the expression and returns its value.
 	 * Runtime type checking will be necessary to determine the value's type.
+	 * @param commands class containing the commands available for execution
+	 * @return the evaluated value of the expression
+	 * @throws ParseException throws if an error is encountered during evaluation
 	 */
 	public abstract Object evaluate(Class commands) throws ParseException;
 }
@@ -33,9 +36,9 @@ class Expression_FunctionCall extends Expression {
 	 * Given a function call, this is the method used to call the method in the class, and return the value after
 	 * invoking the function
 	 *
-	 * @param commands this is the class that should contain the method.
-	 * @return Object - this is the return type of the method. (ex. add (int, int) will return an int)
-	 * @throws ParseException If the method exists but the types are mismatched will throw ParseException.
+	 * @param commands class containing the commands available for execution
+	 * @return the evaluated value of the expression
+	 * @throws ParseException throws if the method does not exist or the types are mismatched
 	 */
 	public Object evaluate(Class commands) throws ParseException{
 		Object[] parameters = new Object[_arguments.size()];
@@ -55,7 +58,7 @@ class Expression_FunctionCall extends Expression {
 		try{
 			for (Method method : commands.getDeclaredMethods()) {
 				if (!name.equals(method.getName())) continue;
-	
+
 				Class[] parameter_types = method.getParameterTypes();
 				if (types.length != parameter_types.length) continue;
 	
@@ -75,7 +78,7 @@ class Expression_FunctionCall extends Expression {
 				// If all checks succeeded, we have found the method
 				return method.invoke(null, parameters);
 			}
-	
+
 			// No method has passed all the checks, the method could not be found
 			throw new NoSuchMethodException(name);
 		}catch (Exception e){
@@ -93,7 +96,7 @@ class Expression_FunctionCall extends Expression {
 					params += " " + c.toString();
 				}
 			}
-			throw new ParseException("Matching function for '("+ name + params +")' not found", _identifier.getLocation().getColumn());		
+			throw new ParseException("Matching function for '("+ name + params +")' not found", _identifier.getLocation().getColumn());
 		}
 	}
 }
