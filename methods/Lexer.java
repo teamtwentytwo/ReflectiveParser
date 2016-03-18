@@ -60,7 +60,7 @@ class Lexer {
 	 */
 	public ParseSymbol readNext() throws ParseException {
 		ParseSymbol terminal = null;
-		int begin = 0, end = 0, endOfString = 1;
+		int begin = 0, end = 0;
 
 		State state = State.Initial;
 		while (state != State.Final) {
@@ -110,11 +110,11 @@ class Lexer {
 						state = State.Final;
 					}
 					else {
-						throw new ParseException("Invalid Character found", _location.getColumn() + 1);
+						throw new ParseException("Invalid character found", _location.getColumn() + 1);
 					}
 					break;
 
-				// Intermediate state for string to handle everyting within quotes	
+				// Intermediate state for string to handle everything within quotes
 				case String:
 					// Final State for Strings
 					if (c == '"') {
@@ -122,10 +122,9 @@ class Lexer {
 						terminal = new ParseSymbol_String(value);
 						state = State.Final;
 					}
-					else if (c == '\0' || c == '\n') {
-						throw new ParseException("Reached end-of-input while reading string", _location.getColumn() + 1 + endOfString);
+					else if (c == '\0') {
+						throw new ParseException("Reached end-of-input while reading string", _location.getColumn() + end - 1);
 					}
-					endOfString++;
 					break;
 
 				// Intermediate state to check for valid Identifier
@@ -149,7 +148,7 @@ class Lexer {
 						state = State.Integer;
 					}
 					else {
-						throw new ParseException("Invalid Number", _location.getColumn() + 1);
+						throw new ParseException("Invalid number", _location.getColumn() + 1);
 					}
 					break;
 

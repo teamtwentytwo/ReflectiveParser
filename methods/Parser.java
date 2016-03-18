@@ -76,9 +76,12 @@ class Parser {
 							_stack.push(ParseSymbol.Type.Act_Value);
 							_stack.push(_lookahead.getType());
 							break;
-						default:
-							//throw new ParseException("Missing Left Parenthesis", _lookahead.getLocation().getColumn() - 1);
-							throw new ParseException("Invalid Expression Read", _lookahead.getLocation().getColumn());
+						case Identifier:
+							throw new ParseException("Unexpected identifier", _lookahead.getLocation().getColumn());
+						case RightParenthesis:
+							throw new ParseException("Unexpected right parenthesis", _lookahead.getLocation().getColumn());
+						case EndOfFile:
+							throw new ParseException("Unexpected end-of-input", _lookahead.getLocation().getColumn());
 					}
 					break;
 
@@ -97,9 +100,10 @@ class Parser {
 							_stack.pop();
 							_stack.push(ParseSymbol.Type.Act_NewExpressionList);
 							break;
-						default:
-							//throw new ParseException("Missing Right Parenthesis", _lookahead.getLocation().getColumn());
-							throw new ParseException("Invalid Expression Read", _lookahead.getLocation().getColumn());
+						case Identifier:
+							throw new ParseException("Missing left parenthesis", _lookahead.getLocation().getColumn());
+						case EndOfFile:
+							throw new ParseException("Missing right parenthesis", _lookahead.getLocation().getColumn());
 					}
 					break;
 
@@ -159,7 +163,12 @@ class Parser {
 						_lookahead = _lexer.readNext();
 					}
 					else {
-						throw new ParseException("Invalid Expression Read", _lookahead.getLocation().getColumn());
+						if (_stack.peek() == ParseSymbol.Type.EndOfFile) {
+							throw new ParseException("Unexpected extra input", _lookahead.getLocation().getColumn());
+						}
+						else {
+							throw new ParseException("Expected "+_stack.peek().toString()+" but got "+_lookahead.getType().toString(), _lookahead.getLocation().getColumn());
+						}
 					}
 			}
 		}

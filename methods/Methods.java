@@ -136,13 +136,13 @@ public class Methods {
 				System.out.print("\n");
 				break;
 			}
-            switch (input) {
+            switch (input.trim()) {
                 case "v":
                     toggleVerbose();
                     break;
                 case "h":
                 case "?":
-                    System.out.println(HELPTEXT);
+                    System.out.println(INITIALIZATIONTEXT);
                     break;
                 case "q":
                	    System.out.println("bye.");
@@ -229,7 +229,7 @@ public class Methods {
         int begin = stackTrace.indexOf(':');
         int end = stackTrace.indexOf('\n');
         //Extracting the simple error message from the stack trace
-        String description = stackTrace.substring(begin + 2, end) + " at offSet " + location + "\n" + input + "\n";
+        String description = stackTrace.substring(begin + 2, end) + " at offset " + location + "\n" + input + "\n";
         String pointer = "";
         //Generating the location pointer based on the location variable given at construct time
         for (int i = 0; i < location; i++) {
