@@ -29,6 +29,14 @@ class Expression_FunctionCall extends Expression {
 		_right_paren = right_paren;
 	}
 
+	/**
+	 * Given a function call, this is the method used to call the method in the class, and return the value after
+	 * invoking the function
+	 *
+	 * @param commands this is the class that should contain the method.
+	 * @return Object - this is the return type of the method. (ex. add (int, int) will return an int)
+	 * @throws ParseException If the method exists but the types are mismatched will throw ParseException.
+	 */
 	public Object evaluate(Class commands) throws ParseException{
 		Object[] parameters = new Object[_arguments.size()];
 		for (int i = 0; i < _arguments.size(); i++) {

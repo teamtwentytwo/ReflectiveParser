@@ -10,6 +10,11 @@ import java.net.URLClassLoader;
 import java.util.*;
 import java.util.jar.JarFile;
 
+/**
+ * Main method used to start program.
+ * @see #main(String[])
+ *
+ */
 public class Methods {
     // Fields
     static String className = "Commands";
@@ -39,7 +44,11 @@ public class Methods {
             "methods in <class-name>, and executes them, printing the result to sysout.\n";
 
 
-
+    /**
+     * Main method, used for starting the program. Program is invoked using the following: methods {-v --verbose}* jarName className
+     *
+     * @param argv [flags (ex. -v, --help), jarName, className]
+     */
     public static void main(String[] argv) {
 
 
@@ -106,7 +115,7 @@ public class Methods {
         //Getting input
         String input;
         Scanner s = new Scanner(System.in);
-
+        //Check files exist and can be opened
         try {
             JarFile j = new JarFile(jarName);
             initialize();
@@ -115,9 +124,9 @@ public class Methods {
         } catch (IOException e) {
             System.exit(FatalErrors.jarNotFound(jarName));
         }
-
-
         System.out.print(INITIALIZATIONTEXT);
+
+        //Get input and call parser.
 		while (true){
             System.out.print("> ");
 			if (s.hasNextLine()) {
@@ -143,13 +152,13 @@ public class Methods {
                     break;
                 default:
                     try {
-			Parser p = new Parser();
-			p.provide(input);
-			p.closeInput();
-			Expression expression = p.parse();
-			Object value = expression.evaluate(command);
-			System.out.println(value.toString());
-                    } catch (ParseException e) {		
+                        Parser p = new Parser();
+                        p.provide(input);
+                        p.closeInput();
+                        Expression expression = p.parse();
+                        Object value = expression.evaluate(command);
+                        System.out.println(value.toString());
+                    } catch (ParseException e) {
                         System.out.print(formatErrorMessage(input, getStackTrace(e), e.getErrorOffset(), verbose));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -158,6 +167,12 @@ public class Methods {
         }
 	}
 
+    /**
+     * Ensures a jarFile can be created, and that the class provided is able to be loaded
+     *
+     * @throws ClassNotFoundException Class passed or default (Commands) class is unable to be found.
+     * @throws IOException jarFile not found.
+     */
     private static void initialize() throws ClassNotFoundException, IOException {
         File jarFile = new File(jarName);
         URL fileURL = jarFile.toURI().toURL();
@@ -168,6 +183,11 @@ public class Methods {
     }
 
 
+    /**
+     * Takes command class and prints out a formatted list of the functions available.
+     *
+     * @return String - Formatted in the following manner "(method parameters) : returnType"
+     */
     private static String functionList(){
         String functions = "";
         for (Method method : command.getDeclaredMethods()){
@@ -181,8 +201,9 @@ public class Methods {
     }
 
 
-
-    //Helper Functions
+    /**
+     * toggles the Verbose flag and prints the current state.
+     */
     private static void toggleVerbose(){
         if (!verbose) {
             verbose = true;
@@ -194,6 +215,7 @@ public class Methods {
 
         }
     }
+
     /**
      * formatMessage method, that constructs the error mesage
      * 
@@ -203,7 +225,7 @@ public class Methods {
      * @param verbose The state of verbose that gives determines whether error message is detailed or simple
      * @return String The error message that is returned
      */
-    public static String formatErrorMessage(String input, String stackTrace, int location, boolean verbose){
+    private static String formatErrorMessage(String input, String stackTrace, int location, boolean verbose){
         int begin = stackTrace.indexOf(':');
         int end = stackTrace.indexOf('\n');
         //Extracting the simple error message from the stack trace
@@ -228,7 +250,7 @@ public class Methods {
      * @param e     The Exception that contains the stack trace
      * @return String The stack trace that is returned
      */
-    public static String getStackTrace(Exception e) {
+    private static String getStackTrace(Exception e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
