@@ -111,7 +111,7 @@ class Lexer {
 						state = State.Final;
 					}
 					else {
-						throw new ParseException("Invalid character found", _location.getColumn() + 1);
+						throw new ParseException("Invalid character found", _location.getColumn() + begin);
 					}
 					break;
 
@@ -149,7 +149,7 @@ class Lexer {
 						state = State.Integer;
 					}
 					else {
-						throw new ParseException("Invalid number", _location.getColumn() + 1);
+						throw new ParseException("Invalid number", _location.getColumn() + begin + 1);
 					}
 					break;
 
